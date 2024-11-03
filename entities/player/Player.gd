@@ -1,8 +1,8 @@
 extends CharacterBody2D
 
-@onready var animated_sprite = $AnimatedSprite2D;
-
 @export var speed: float = 185;
+
+@onready var animated_sprite = $AnimatedSprite2D;
 
 var direction: Vector2 = Vector2.ZERO;
 
@@ -13,6 +13,7 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	flip_sprite();
+	manage_animation_state();
 
 func _physics_process(delta: float) -> void:
 	move_player();
@@ -43,3 +44,10 @@ func debug_collisions() -> void:
 	for collision_index in range(collisions_count):
 		var collision: KinematicCollision2D = get_slide_collision(collision_index);
 		print_debug(collision.get_collider());
+
+func manage_animation_state() -> void:
+	if(velocity == Vector2.ZERO):
+		animated_sprite.play("idle");
+		return;
+
+	animated_sprite.play("running");
